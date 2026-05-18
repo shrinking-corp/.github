@@ -1,13 +1,65 @@
-## Hi there 👋
+# 📐 Diagram Shrinking
 
-TODO: customize landing page
-<!--
+Welcome to the **Shrinking Corp** organisation — a collection of open repositories for shrinking diagrams algorithmically, exposing those algorithms as tools for AI agents, and measuring their correctness.
 
-**Here are some ideas to get you started:**
+---
 
-🙋‍♀️ A short introduction - what is your organization all about?
-🌈 Contribution guidelines - how can the community get involved?
-👩‍💻 Useful resources - where can the community find your docs? Is there anything else the community should know?
-🍿 Fun facts - what does your team eat for breakfast?
-🧙 Remember, you can do mighty things with the power of [Markdown](https://docs.github.com/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
--->
+## Repositories
+
+### [`app`](../app)
+A minimal full-stack web application with a **FastAPI** backend and a **React + Vite** frontend. Handles the user interface, API communication, and database persistence for the core business logic. Shrinking algorithms are intentionally kept out of this layer — see `algorithms` below.
+
+### [`algorithms`](../algorithms)
+A standalone **Python library published to PyPI**. This is the single source of truth for all shrinking algorithm implementations. Install it in any project:
+
+```bash
+pip install shrinking-algorithms
+```
+
+### [`mcp-server`](../mcp-server)
+An **MCP (Model Context Protocol) server** that exposes the shrinking algorithms from `algorithms` as callable tools. Any MCP-compatible client or agent can connect and invoke the algorithms without writing Python directly.
+
+### [`agentic-ai`](../agentic-ai)
+A **general-purpose chat client** built on top of OpenAI and LangGraph. On startup it connects to our `mcp-server`, discovers available tools, and lets the language model decide autonomously when and how to apply shrinking algorithms during a conversation.
+
+### [`benchmarks`](../benchmarks)
+A **dataset and runnable evaluation suite** for measuring the correctness of the shrinking algorithms. Also used to determine baseline configuration parameters that feed back into the `algorithms` library.
+
+---
+
+## How the pieces fit together
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  app  (full-stack UI + business logic)                  │
+│      │                                                  │
+│      └── uses ──▶  algorithms  (PyPI library)           │
+└─────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────┐
+│  agentic-ai  (OpenAI + LangGraph chat agent)            │
+│      │                                                  │
+│      └── connects to ──▶  mcp-server  (MCP tools)       │
+│                                │                        │
+│                                ▼                        │
+│                         algorithms  (PyPI library)      │
+└─────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────┐
+│  benchmarks  (correctness evaluation + parameter tuning)│
+│      │                                                  │
+│      └── evaluates ──▶  algorithms  (PyPI library)      │
+└─────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Getting started
+
+| Goal | Where to start |
+|---|---|
+| Run the web application | [`app`](../app) |
+| Use shrinking algorithms in your own code | [`algorithms`](../algorithms) |
+| Connect an AI agent to the algorithms | [`agentic-ai`](../agentic-ai) |
+| Expose algorithms as MCP tools | [`mcp-server`](../mcp-server) |
+| Evaluate or tune the algorithms | [`benchmarks`](../benchmarks) |
